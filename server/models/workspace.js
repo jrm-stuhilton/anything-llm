@@ -193,6 +193,17 @@ const Workspace = {
    */
   new: async function (name = null, creatorId = null, additionalFields = {}) {
     if (!name) return { workspace: null, message: "name cannot be null" };
+
+    // CHIMAERA Insight: this deployment is locked to a single workspace so all
+    // users share the one curated document repository. Creation is only
+    // allowed when no workspace exists yet (first-boot/onboarding).
+    const existingCount = await prisma.workspaces.count();
+    if (existingCount > 0)
+      return {
+        workspace: null,
+        message:
+          "Workspace creation is disabled. This instance is limited to a single workspace.",
+      };
     var slug = this.slugify(name, { lower: true });
     slug = slug || uuidv4();
 

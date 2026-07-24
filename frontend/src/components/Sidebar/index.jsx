@@ -12,6 +12,7 @@ import { Link } from "react-router-dom";
 import paths from "@/utils/paths";
 import { useTranslation } from "react-i18next";
 import { useSidebarToggle, ToggleSidebarButton } from "./SidebarToggle";
+import useWorkspaceCreationLocked from "@/hooks/useWorkspaceCreationLocked";
 import SearchBox from "./SearchBox";
 import { Tooltip } from "react-tooltip";
 import { createPortal } from "react-dom";
@@ -190,6 +191,8 @@ export function SidebarMobileHeader() {
 
 function NewWorkspaceButton({ user, showNewWsModal }) {
   const { t } = useTranslation();
+  const creationLocked = useWorkspaceCreationLocked();
+  if (creationLocked) return null;
   if (!!user && user?.role === "default") return null;
 
   return (
